@@ -1,4 +1,8 @@
-### <font color='red'>**This project utilizes the Transformer model, based on the paper [Attention Is All You Need](https://arxiv.org/abs/1706.03762).**</font>
+### **This project utilizes the Transformer model** ###
+### **Based on the paper [Attention Is All You Need](https://arxiv.org/abs/1706.03762).** ###
+
+
+Below is a brief introduction to each file:
 
 `├── data  训练数据`
 
@@ -27,3 +31,4 @@
 `├── transformer.py  Transformer模型实现`
 
 `├── truncate_files.py  选取data文件夹中前若干条数据`
+
