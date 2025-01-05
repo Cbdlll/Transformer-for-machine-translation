@@ -1,14 +1,7 @@
 import torch
-import json
 from torch.utils.data import Dataset, DataLoader
-from torch.nn.utils.rnn import pad_sequence
 from simpleTokenizer import SimpleTokenizer
-
-def load_vocab(vocab_file):
-    with open(vocab_file, 'r', encoding='utf-8') as f:
-        return json.load(f)
-    
-    
+  
 class TranslationDataset(Dataset):
     def __init__(self, zh_file, en_file, zh_tokenizer, en_tokenizer, max_len=512):
         self.zh_tokenizer = zh_tokenizer
