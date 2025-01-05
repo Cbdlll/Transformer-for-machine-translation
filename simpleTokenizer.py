@@ -9,8 +9,13 @@ class SimpleTokenizer:
     def __init__(self, vocab_path):
         self.vocab_path = vocab_path
         # 加载词汇表
-        with open(self.vocab_path, "r", encoding="utf-8") as f:
-            self.vocab = json.load(f)
+        try:
+            with open(self.vocab_path, "r", encoding="utf-8") as f:
+                    self.vocab = json.load(f)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"词汇表文件 {self.vocab_path} 未找到")
+        except json.JSONDecodeError:
+            raise json.JSONDecodeError(f"词汇表文件 {self.vocab_path} 格式错误")
         
         self.pad_token = "<PAD>"
         self.unk_token = "<UNK>"
