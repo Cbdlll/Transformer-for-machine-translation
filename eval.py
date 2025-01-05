@@ -45,7 +45,7 @@ def translate_sentence(model, src_sentence, src_tokenizer, tgt_tokenizer, max_le
         # decoder_input = torch.cat([decoder_input, next_token], dim=1)  # 随机采样
 
     # 将生成的 Token 转换为文本
-    return join_tokens(tgt_tokenizer.decode(generated_tokens))
+    return join_tokens(tgt_tokenizer.decode(generated_tokens, skip_special_tokens=True))
 
 def join_tokens(tokens):
     sentence = ""
@@ -80,6 +80,7 @@ if __name__ == '__main__':
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = Transformer(3886, 3366, 512, 8, 6, 256, 0.1).to(device)
+    # # 若要将在 GPU 上训练或存储的模型或张量加载到 CPU 上，需要map_location=torch.device('cpu')，否则会报错。
     # model.load_state_dict(torch.load('transformer_translation.pth', map_location=torch.device('cpu'), weights_only=True))
     model.load_state_dict(torch.load('transformer_translation.pth', weights_only=True))
 

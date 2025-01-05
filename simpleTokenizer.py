@@ -17,6 +17,8 @@ class SimpleTokenizer:
         except json.JSONDecodeError:
             raise json.JSONDecodeError(f"词汇表文件 {self.vocab_path} 格式错误")
         
+        self.id_to_token = {v: k for k, v in self.vocab.items()}  # 创建反向词汇表，便于解码
+        
         self.pad_token = "<PAD>"
         self.unk_token = "<UNK>"
         self.bos_token = "<BOS>"
@@ -55,10 +57,15 @@ class SimpleTokenizer:
             token_ids += [self.pad_id] * (max_length - len(token_ids))
         
         return torch.tensor(token_ids, dtype=torch.long)
-
-    def decode(self, token_ids):
-        id_to_word = {idx: word for word, idx in self.vocab.items()}
-        return [id_to_word.get(token_id, self.unk_token) for token_id in token_ids]
+    
+    def decode(self, token_ids, skip_special_tokens=False):
+        decoded_tokens = []
+        for token_id in token_ids:
+            token = self.id_to_token.get(token_id, self.unk_token)
+            if skip_special_tokens and token in {self.pad_token, self.unk_token, self.bos_token, self.eos_token}:
+                continue
+            decoded_tokens.append(token)
+        return decoded_tokens
     
 if __name__ == '__main__':
     
@@ -71,11 +78,11 @@ if __name__ == '__main__':
     print(len(zh_indices))
     
     
-    en_tokenzier = SimpleTokenizer(vocab_path='vocab/vocab_en.json')
-    en_sentence = "And if we just take that and we build from there, then we can go to the next step, which is that if the ocean happy, nobody happy"
-    en_indices = en_tokenzier.encode(en_sentence, add_bos_eos=True)
-    print(en_tokenzier.tokenize(en_sentence))
-    print(en_indices)
-    print(en_tokenzier.decode(en_indices.tolist()))
-    print(len(en_indices))
+    # en_tokenzier = SimpleTokenizer(vocab_path='vocab/vocab_en.json')
+    # en_sentence = "And if we just take that and we build from there, then we can go to the next step, which is that if the ocean happy, nobody happy"
+    # en_indices = en_tokenzier.encode(en_sentence, add_bos_eos=True)
+    # print(en_tokenzier.tokenize(en_sentence))
+    # print(en_indices)
+    # print(en_tokenzier.decode(en_indices.tolist()))
+    # print(len(en_indices))
     
